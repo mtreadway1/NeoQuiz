@@ -29,12 +29,12 @@ public class QuizActivity extends AppCompatActivity {
     private Button mCheatbutton;
 
     private Question[] mQuestionBank = new Question[]{
-            new Question(R.string.question_australia, true),
-            new Question(R.string.question_oceans, true),
-            new Question(R.string.question_mideast, false),
-            new Question(R.string.question_africa, false),
-            new Question(R.string.question_americas, true),
-            new Question(R.string.question_asia, true),
+            new Question(R.string.question_australia, true, false),
+            new Question(R.string.question_oceans, true, false),
+            new Question(R.string.question_mideast, false, false),
+            new Question(R.string.question_africa, false, false),
+            new Question(R.string.question_americas, true, false),
+            new Question(R.string.question_asia, true, false),
 
     };
 
@@ -131,6 +131,7 @@ public class QuizActivity extends AppCompatActivity {
                 // Start CheatActivity
                 //Intent intent = new Intent(QuizActivity.this, CheatActivity.class);
                 boolean answerIsTrue = mQuestionBank[mCurrentIndex].isAnswerTrue();
+                mQuestionBank[mCurrentIndex].setHasCheated(true);
                 Intent intent = CheatActivity.newIntent(QuizActivity.this, answerIsTrue);
                 //startActivity(intent);
                 startActivityForResult(intent, REQUEST_CODE_CHEAT);
@@ -227,6 +228,8 @@ public class QuizActivity extends AppCompatActivity {
         boolean answerisTrue = mQuestionBank[mCurrentIndex].isAnswerTrue();
 
         int messageResId = 0;
+
+        mIsCheater = mQuestionBank[mCurrentIndex].getHasCheated();
 
         if (mIsCheater) {
             messageResId = R.string.judgment_toast;
