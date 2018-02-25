@@ -2,6 +2,7 @@ package com.bignerdranch.android.neoquiz;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.os.Build;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -27,6 +28,8 @@ public class QuizActivity extends AppCompatActivity {
     private TextView mQuestionTextView;
     private Integer scoreKeep = 0;
     private Button mCheatbutton;
+    private Integer mTokenCount = 3;
+    private TextView mTokenCountDisplay;
 
     private Question[] mQuestionBank = new Question[]{
             new Question(R.string.question_australia, true, false),
@@ -41,6 +44,12 @@ public class QuizActivity extends AppCompatActivity {
     private int mCurrentIndex = 0;
     private boolean mIsCheater;
 
+
+
+    @Override
+    public <T extends View> T findViewById(int id) {
+        return super.findViewById(id);
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -74,7 +83,8 @@ public class QuizActivity extends AppCompatActivity {
             }
         });
 
-
+        mTokenCountDisplay = (TextView) findViewById(R.id.token_count);
+        mTokenCountDisplay.setText(Integer.toString (mTokenCount));
 
         mTrueButton = (Button) findViewById(R.id.true_button);
         mTrueButton.setOnClickListener(new View.OnClickListener(){
@@ -135,6 +145,7 @@ public class QuizActivity extends AppCompatActivity {
                 Intent intent = CheatActivity.newIntent(QuizActivity.this, answerIsTrue);
                 //startActivity(intent);
                 startActivityForResult(intent, REQUEST_CODE_CHEAT);
+
             }
         });
 
@@ -166,6 +177,17 @@ public class QuizActivity extends AppCompatActivity {
                 return;
             }
             mIsCheater = CheatActivity.wasAnswerShown(data);
+            if(mIsCheater == true) {
+                if(mTokenCount != 0){
+
+                    mTokenCount--;
+                }
+                if(mTokenCount == 0){
+                    mCheatbutton.setEnabled(false);
+                }
+                mTokenCountDisplay = (TextView) findViewById(R.id.token_count);
+                mTokenCountDisplay.setText(Integer.toString(mTokenCount));
+            }
         }
     }
 
